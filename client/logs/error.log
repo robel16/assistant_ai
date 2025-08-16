@@ -219,3 +219,7 @@
 25Y-08-21:07:09 error: Confirmation email failed: Failed to send email: connect ETIMEDOUT 173.194.69.108:587 
 25Y-08-21:07:57 error: ❌ Email send error: connect ETIMEDOUT 173.194.69.108:587 
 25Y-08-21:07:57 error: Confirmation email failed: Failed to send email: connect ETIMEDOUT 173.194.69.108:587 
+25Y-08-21:58:49 error: NLP Processing Failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: fetch failed 
+25Y-08-21:58:49 error: Error scheduling meeting: Failed to process request with AI: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: fetch failed 
+25Y-08-22:03:37 error: ❌ Email send error: connect ETIMEDOUT 108.177.96.109:587 
+25Y-08-22:03:37 error: Confirmation email failed: Failed to send email: connect ETIMEDOUT 108.177.96.109:587 
