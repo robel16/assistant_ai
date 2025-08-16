@@ -215,3 +215,7 @@
 535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-45a119e96dfsm35622015e9.2 - gsmtp 
 25Y-08-16:05:21 error: Confirmation email failed: Failed to send email: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
 535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-45a119e96dfsm35622015e9.2 - gsmtp 
+25Y-08-21:07:09 error: ❌ Email send error: connect ETIMEDOUT 173.194.69.108:587 
+25Y-08-21:07:09 error: Confirmation email failed: Failed to send email: connect ETIMEDOUT 173.194.69.108:587 
+25Y-08-21:07:57 error: ❌ Email send error: connect ETIMEDOUT 173.194.69.108:587 
+25Y-08-21:07:57 error: Confirmation email failed: Failed to send email: connect ETIMEDOUT 173.194.69.108:587 

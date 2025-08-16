@@ -15,11 +15,11 @@ const generateMeetingLink = (meetingDetails) => {
 		jitsi: `https://meet.jit.si/${roomName}`,
 		whereby: `https://whereby.com/${roomName}`,
 		discord: `https://discord.gg/temp-meeting-${meetingId.slice(-8)}`,
-		zoom: `https://zoom.us/j/${meetingId}?pwd=QUFzc3N0YW50MTIz`, // Generic meeting room
+		zoom: `https://zoom.us/j/${meetingId}?pwd=QUFzc3N0YW50MTIz`, // test link for zoom meeting
 		teams: `https://teams.microsoft.com/l/meetup-join/meeting-${meetingId}`
 	};
 	
-	// Use Jitsi Meet (free, no account required, always works)
+	// Use Jitsi Meet 
 	return providers.jitsi;
 };
 

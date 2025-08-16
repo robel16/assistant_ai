@@ -53,6 +53,8 @@ export default function AIAssistantForm() {
   const [selectedTime, setSelectedTime] = useState({ hour: 9, minute: 0 })
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
+  const [reminders, setReminders] = useState<any[]>([])
+
   const { toast } = useToast()
 
   const requestTypes = [
@@ -84,6 +86,19 @@ export default function AIAssistantForm() {
     }
   }, [])
 
+  useEffect(() => {
+    if (showHistory) {
+      fetch("http://localhost:5000/api/reminders")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setReminders(data.data)
+          }
+        })
+        .catch((err) => console.error("Failed to fetch reminders:", err))
+    }
+  }, [showHistory])
+
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
   }
@@ -98,7 +113,7 @@ export default function AIAssistantForm() {
     const day = String(selectedDate.getDate()).padStart(2, "0")
     const hour = String(selectedTime.hour).padStart(2, "0")
     const minute = String(selectedTime.minute).padStart(2, "0")
-    return `${year}-${month}-${day}T${hour}:${minute}`
+    return `${year}-${month}-${day}T${hour}:${minute}:00.000+00:00`
   }
 
   const handleDateSelect = (day: number) => {
@@ -191,7 +206,10 @@ export default function AIAssistantForm() {
     }
 
     try {
-      const endpoint = "http://localhost:5000/api/schedule"
+      let endpoint = "http://localhost:5000/api/schedule"
+      if (requestType === "reminder") {
+        endpoint = "http://localhost:5000/api/reminder"
+      }
 
       const promises = validEmails.map((email) =>
         fetch(endpoint, {
@@ -199,14 +217,23 @@ export default function AIAssistantForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            type: requestType,
-            task: formData.task,
-            dueDate: formData.dueDate,
-            userId: email,
-            priority: formData.priority,
-            participants: requestType === "meeting" ? validEmails : undefined,
-          }),
+          body: JSON.stringify(
+            requestType === "reminder"
+              ? {
+                  task: formData.task,
+                  dueDate: formData.dueDate,
+                  userId: email,
+                  priority: formData.priority,
+                }
+              : {
+                  type: requestType,
+                  task: formData.task,
+                  dueDate: formData.dueDate,
+                  userId: email,
+                  priority: formData.priority,
+                  participants: requestType === "meeting" ? validEmails : undefined,
+                },
+          ),
         }),
       )
 
@@ -715,6 +742,69 @@ export default function AIAssistantForm() {
                     })}
                   </div>
                 )}
+                <div className="mt-6 border-t pt-4">
+                  <CardTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                    <Bell className="w-5 h-5" />
+                    All Reminders
+                  </CardTitle>
+                  {reminders.length === 0 ? (
+                    <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                      <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      <p>No reminders found</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                      {reminders.map((rem, index) => (
+                        <div
+                          key={rem._id}
+                          className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 animate-in slide-in-from-bottom-4 duration-300"
+                          style={{ animationDelay: `${index * 100}ms` }}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Bell className="w-4 h-4 text-primary" />
+                              <Badge variant="outline" className="text-xs">
+                                Reminder
+                              </Badge>
+                              <Badge
+                                variant={
+                                  rem.priority === "high"
+                                    ? "destructive"
+                                    : rem.priority === "medium"
+                                      ? "default"
+                                      : "secondary"
+                                }
+                              >
+                                {rem.priority}
+                              </Badge>
+                              <Badge
+                                variant={
+                                  rem.status === "pending" ? "secondary" : "default"
+                                }
+                              >
+                                {rem.status}
+                              </Badge>
+                            </div>
+                            <span className="text-xs text-slate-500 dark:text-slate-400">
+                              {formatDate(rem.createdAt)}
+                            </span>
+                          </div>
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-2 line-clamp-2">
+                            {rem.task}
+                          </p>
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            <Badge variant="outline" className="text-xs">
+                              {rem.userId}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Due: {formatDate(rem.dueDate)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           )}

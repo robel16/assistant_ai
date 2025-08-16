@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { processDueReminders } = require('../controllers/reminderController');
 
-// Endpoint for Cloud Scheduler to trigger daily check
+// Endpoint  to trigger daily check
 router.get('/daily-check', async (req, res) => {
   try {
     const result = await processDueReminders();
